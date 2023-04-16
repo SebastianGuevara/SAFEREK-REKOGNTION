@@ -1,21 +1,18 @@
 const { RekognitionClient, IndexFacesCommand, SearchFacesByImageCommand } = require("@aws-sdk/client-rekognition");
-const fs = require('fs');
-require('dotenv').config({path:'../../.env'})
+require('dotenv').config({path:'../../../.env'})
 
 const client = new RekognitionClient({
     accessKeyId: process.env.ACCESS_KEY_ID,
     secretAccessKey: process.env.SECRET_ACCESS_KEY,
     region: process.env.REGION
 })
-const imagePath = '../../testImages/1234.png'
-const imageBytes = new Uint8Array(fs.readFileSync(imagePath));
-console.log(imageBytes);
-const uploadImageToCollection = async (workerId) => {      
+
+const uploadImageToCollection = async (workerId, base64Image) => {      
     const params = {
         CollectionId: "WorkersFaces",
         ExternalImageId: workerId,
         Image: {
-            Bytes: imageBytes
+            Bytes: Buffer.from(base64Image,'base64'),
         }
     }
 
@@ -28,11 +25,14 @@ const uploadImageToCollection = async (workerId) => {
     }
 }
 
-const searchFacesInCollection = async () => {
+const searchFacesInCollection = async (imageName) => {
     const params = {
         CollectionId: "WorkersFaces",
         Image: {
-            Bytes: imageBytes
+            S3Object:{
+                Bucket: 'saferek-faces',
+                Name: `comparedFaces/${imageName}`
+            }
         },
         FaceMatchThreshold: 80,
         MaxFaces: 1
@@ -40,10 +40,10 @@ const searchFacesInCollection = async () => {
     
     try{
         const response = await client.send(new SearchFacesByImageCommand(params));
-        console.log(response.FaceMatches);
+        return response.FaceMatches[0].Face.ExternalImageId;
     }
     catch(error){
-        console.error(error);
+        return error;
     }
 }
 
