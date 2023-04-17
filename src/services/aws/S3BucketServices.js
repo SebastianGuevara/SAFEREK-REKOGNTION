@@ -1,8 +1,8 @@
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 require('dotenv').config({path:'../../../.env'})
 const s3 = new S3Client({
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    accessKeyId: "process.env.ACCESS_KEY_ID",
+    secretAccessKey: "process.env.SECRET_ACCESS_KEY",
     region: process.env.REGION
 });
 
