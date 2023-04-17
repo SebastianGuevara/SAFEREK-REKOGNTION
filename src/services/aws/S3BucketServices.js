@@ -8,7 +8,6 @@ const s3 = new S3Client({
 });
 
 const uploadImageToBucket = async (key,name, file) => {
-    const file = fs.createReadStream(req.file.path);
     const params = {
         Bucket: 'saferek-faces',
         Key: `${key}/${name}.jpeg`,
