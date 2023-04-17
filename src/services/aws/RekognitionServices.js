@@ -43,7 +43,7 @@ const searchFacesInCollection = async (imageName) => {
         return response.FaceMatches[0].Face.ExternalImageId;
     }
     catch(error){
-        return error;
+        throw error;
     }
 }
 

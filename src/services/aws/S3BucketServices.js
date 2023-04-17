@@ -6,10 +6,10 @@ const s3 = new S3Client({
     region: process.env.REGION
 });
 
-const uploadImageToBucket = async (bucket, key, base64Image) => {
+const uploadImageToBucket = async (key,name, base64Image) => {
     const params = {
-        Bucket: `saferek-faces/${bucket}`,
-        Key: key,
+        Bucket: 'saferek-faces',
+        Key: `${key}/${name}.jpeg`,
         Body: Buffer.from(base64Image,'base64'),
         ContentType: 'image/jpeg',
         ACL: 'private'
@@ -23,5 +23,4 @@ const uploadImageToBucket = async (bucket, key, base64Image) => {
         console.error(error);
     }
 }
-
 module.exports = {uploadImageToBucket}

@@ -1,17 +1,40 @@
-const { searchFacesInCollection } = require('../services/aws/RekognitionServices.js')
+const { searchFacesInCollection } = require('../services/aws/RekognitionServices.js');
+const { uploadImageToBucket } = require('../services/aws/S3BucketServices.js');
+const { generateRandomImageName } = require('../services/ImageServices.js');
 require('dotenv').config({path:'../../.env'})
 
 const getImageFromCollection = async (req,res) =>{
     const { imageName } = req.params;
-    //console.log(imageName);
-    res.send({workerId:await searchFacesInCollection(imageName)});
-    console.log(process.env.SECRET_ACCESS_KEY);
-    console.log(process.env.ACCESS_KEY_ID);
+    try{
+        res.send({workerId:await searchFacesInCollection(imageName)});
+    }
+    catch(error){
+        res.status(500);
+        res.send({Error: error})
+    }
 }
 
-const test = ( req,res) => {
-    const { word } = req.params;
-    res.send({test:require('uuid').v4()});
+const postImageToBucket = async (req,res) =>{
+    const body = req.body;
+    try{
+        await uploadImageToBucket(body.key,body.name,body.base64);
+        res.send("Imagen subida con exito")
+    }
+    catch(error){
+        res.status(500);
+        res.send({Error: error})
+    }
 }
 
-module.exports = {getImageFromCollection, test};
+const getRandomImageName = async (req,res) =>{
+    try{
+        res.send(generateRandomImageName());
+    }
+    catch(error){
+        res.status(500);
+        res.send({Error: error})
+    }
+}
+
+
+module.exports = {getImageFromCollection, postImageToBucket, getRandomImageName};
