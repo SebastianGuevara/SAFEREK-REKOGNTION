@@ -17,7 +17,7 @@ const getImageFromCollection = async (req,res) =>{
 const postImageToBucket = async (req,res) =>{
     const body = req.body;
     try{
-        await uploadImageToBucket(body.key,body.name,body.base64);
+        await uploadImageToBucket(body.key,body.name,req.file.buffer);
         res.send("Imagen subida con exito")
     }
     catch(error){
