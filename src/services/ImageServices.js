@@ -4,7 +4,7 @@ const formatImageName = (imageName) =>{
 }
 
 const generateRandomImageName = () =>{
-    return `${uuid.v4()}.jpeg`;
+    return `${uuid.v4()}`;
 }
 
 module.exports = {formatImageName, generateRandomImageName}
