@@ -1,4 +1,5 @@
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const fs = require('fs');
 require('dotenv').config({path:'../../../.env'})
 const s3 = new S3Client({
     accessKeyId: "process.env.ACCESS_KEY_ID",
@@ -6,11 +7,12 @@ const s3 = new S3Client({
     region: process.env.REGION
 });
 
-const uploadImageToBucket = async (key,name, base64Image) => {
+const uploadImageToBucket = async (key,name, file) => {
+    const file = fs.createReadStream(req.file.path);
     const params = {
         Bucket: 'saferek-faces',
         Key: `${key}/${name}.jpeg`,
-        Body: Buffer.from(base64Image,'base64'),
+        Body: file,
         ContentType: 'image/jpeg',
         ACL: 'private'
     }
