@@ -1,0 +1,22 @@
+name: CD
+
+on:
+  push:
+    branches: ["master", "development"]
+
+jobs:
+  delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Descargando proyecto
+      - uses: mr-smithers-excellent/docker-build-push@v6
+        name: Construir imágen y push del docker image
+        with:
+          image: sebguevara/saferek-rekognition
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKERUSER }}
+          password: ${{ secrets.DOCKERPASSWORD }}
+      
