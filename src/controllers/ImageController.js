@@ -3,15 +3,15 @@ require('dotenv').config({path:'../../.env'})
 
 const getImageFromCollection = async (req,res) =>{
     const { imageName } = req.params;
-    //console.log(imageName);
-    res.send({workerId:await searchFacesInCollection(imageName)});
-    console.log(process.env.SECRET_ACCESS_KEY);
-    console.log(process.env.ACCESS_KEY_ID);
+    try{
+        res.send({workerId:await searchFacesInCollection(imageName)});
+    }
+    catch(e){
+        res.status(500);
+        res.send({Error: e})
+    }
+    
 }
 
-const test = ( req,res) => {
-    const { word } = req.params;
-    res.send({test:require('uuid').v4()});
-}
 
-module.exports = {getImageFromCollection, test};
+module.exports = {getImageFromCollection};
